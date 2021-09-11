@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-lg">
+    <div class="row">
+        <div class="col-12 col-lg-6 offset-lg-3">
+            <h2>Регистрация</h2>
+            <form method="POST" action="">
+                {{ form.csrf_token }}
+                <div class="mb-3">
+                    {{ form.name.label(class_="form-label") }}
+                    {{ form.name(class_="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label(class_="form-label") }}
+                    {{ form.email(class_="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.passwd.label(class_="form-label") }}
+                    {{ form.passwd(class_="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.repasswd.label(class_="form-label") }}
+                    {{ form.repasswd(class_="form-control") }}
+                </div>
+                <a href="/login" class="btn btn-link">Авторизация</a>
+                <button type="submit" name="accept_btn" class="btn btn-success float-end">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
