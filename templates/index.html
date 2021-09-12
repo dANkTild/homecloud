@@ -3,7 +3,27 @@
 {% block content %}
 <div class="container-lg">
     <div class="row">
+        <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form class="modal-content" method="POST" enctype="multipart/form-data">
+                    {{ upload_form.csrf_token }}
+                    <div class="modal-header">
+                        <h5 class="modal-title">Загрузка</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ upload_form.files.label(class_="form-label") }}
+                        {{ upload_form.files(class_="form-control") }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary">Загрузить файлы</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <i class="bi bi-plus-circle-dotted btn btn-outline-success add-file-btn" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
     </div>
 </div>
 {% endblock %}

@@ -1,19 +1,19 @@
-import sqlalchemy
-from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
 
 
-class User(SqlAlchemyBase, UserMixin, SerializerMixin):
+# TODO: переделать взаимодействие втф и логин
+class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'Users'
 
-    id = sqlalchemy.Column(sqlalchemy.Integer,
-                           primary_key=True, autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
-    email = sqlalchemy.Column(sqlalchemy.String, unique=True)
-    hashed_password = sqlalchemy.Column(sqlalchemy.String)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True)
+    hashed_password = Column(String)
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

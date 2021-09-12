@@ -1,9 +1,12 @@
+import os
 from flask import Flask, redirect, render_template
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 
 from models import db_session
 from models.users import User
+from models.files import File, Folder
 from models.users_forms import LoginForm, RegisterForm
+from models.creating_forms import UploadForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
@@ -18,11 +21,17 @@ def load_user(user_id):
     return db.query(User).get(user_id)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
     if not current_user.is_authenticated:
         return redirect("/login")
-    return render_template("index.html")
+
+    upload_form = UploadForm()
+    if upload_form.validate_on_submit():
+        f = upload_form.files.data
+        f.save(os.path.join("files", f.filename))
+
+    return render_template("index.html", upload_form=upload_form)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -59,9 +68,15 @@ def register():
                     email=form.email.data)
         user.set_password(form.passwd.data)
 
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
         login_user(user, remember=True)
 
-        db.add(user)
+        root_folder = Folder(name="/", owner=user)
+
+        db.add(root_folder)
         db.commit()
 
     return render_template("registration.html", form=form)
@@ -71,4 +86,4 @@ if __name__=='__main__':
     db_session.global_init("database/data.db")
     db = db_session.create_session()
 
-    app.run(debug=True)
+    app.run("0.0.0.0", debug=True)
