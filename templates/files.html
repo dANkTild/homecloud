@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-lg">
+    <div class="row">
+        <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Создание</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="ffName">Укажите имя</label>
+                        <input type="text" id="ffName">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-success create-confirm" data-bs-dismiss="modal">Создать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form class="modal-content" method="POST" enctype="multipart/form-data">
+                    {{ upload_form.csrf_token }}
+                    <div class="modal-header">
+                        <h5 class="modal-title">Загрузка</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ upload_form.files.label(class_="form-label") }}
+                        {{ upload_form.files(class_="form-control") }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary">Загрузить файлы</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="btn-toolbar" role="toolbar">
+            <div class="dropdown mx-1">
+                <button class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Создать
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item create-file" data-bs-toggle="modal" data-bs-target="#createModal">Файл</a></li>
+                    <li><a class="dropdown-item create-folder" data-bs-toggle="modal" data-bs-target="#createModal">Папка</a></li>
+                </ul>
+            </div>
+            <button type="button" class="btn btn-outline-secondary mx-1" data-bs-toggle="modal" data-bs-target="#uploadModal">Загрузить</button>
+        </div>
+        <div class="container">
+            <div class="row my-1">
+                <h4>Папки</h4>
+                <div class="row row-cols-1 row-cols-md-5">
+                    {% for f in folders %}
+                    <div class="col mb-1">
+                        <a href="{{f.id}}" class="text-body card-link">
+                            <div class="card h-100">
+                                <div class="card-img-top text-center"><i class="bi bi-folder2-open file-icon"></i></div>
+                                <div class="card-body">
+                                    <p class="card-text">{{ f.name }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row my-1">
+                <h4>Файлы</h4>
+                <div class="row row-cols-1 row-cols-md-5">
+                    {% for f in files %}
+                    <div class="col">
+                        <a href="/view/{{ f.id }}" class="text-body card-link">
+                            <div class="card h-100">
+                                <div class="card-img-top text-center"><i class="bi bi-file-earmark file-icon"></i></div>
+                                <div class="card-body">
+                                    <p class="card-text">{{ f.name }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block postscripts %}
+<script src="/static/js/files.js"></script>
+{% endblock %}
